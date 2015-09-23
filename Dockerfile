@@ -32,7 +32,7 @@ RUN apt-get install -fyqq \
 # Download and extract phantomjs
 RUN echo "Downloading src, unzipping & removing zip"
 WORKDIR /phantomjs
-ADD https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.0.0-source.zip
+ADD https://bitbucket.org/ariya/phantomjs/downloads/ ./phantomjs-2.0.0-source.zip
 RUN unzip phantomjs-2.0.0-source.zip
 RUN rm phantomjs-2.0.0-source.zip
 
