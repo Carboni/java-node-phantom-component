@@ -1,4 +1,4 @@
-from carboni/java-node-component
+from onsdigital/java-node-component
 
 #Phantom JS 2 build taken from: https://github.com/rosenhouse/phantomjs2
 
