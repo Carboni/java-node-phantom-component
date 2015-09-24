@@ -1,27 +1,12 @@
 from onsdigital/java-node-component
 
-#Phantom JS 2 build taken from: https://github.com/rosenhouse/phantomjs2
+# Phantom JS 2 build taken from: https://github.com/rosenhouse/phantomjs2
+
+
+# Dependencies for running phantomjs
 
 RUN apt-get clean
-RUN apt-get update -yqq
-
-# Dependencies we just need for building phantomjs
-RUN apt-get install -fyqq \
-  wget \
-  unzip \
-  python \
-  build-essential \
-  g++ \
-  flex \
-  bison \
-  gperf \
-  ruby \
-  perl \
-  libsqlite3-dev \
-  libssl-dev \
-  libpng-dev
-
-# Dependencies we need for running phantomjs
+RUN apt-get update -y
 RUN apt-get install -fyqq \
   libicu-dev \
   libfontconfig1-dev \
@@ -29,39 +14,23 @@ RUN apt-get install -fyqq \
   libfreetype6 \
   openssl
 
-# Download and extract phantomjs
-RUN echo "Downloading src, unzipping & removing zip"
-WORKDIR /phantomjs
-ADD https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.0.0-source.zip ./phantomjs-2.0.0-source.zip
-RUN unzip phantomjs-2.0.0-source.zip
-RUN rm phantomjs-2.0.0-source.zip
 
-# Build
-RUN echo "Building phantom"
-WORKDIR phantomjs-2.0.0
-RUN ./build.sh --confirm --silent
+# Add pre-built binaries:
 
-# Cleanup
-RUN echo "Removing everything but the binary"
-RUN mv bin /phantomjs/
-WORKDIR /phantomjs
-RUN rm -rf phantomjs-2.0.0
+ADD ./ubuntu /built/
+
 
 # Symlink
-RUN echo "Symlink phantom so that we are able to run `phantomjs`"
-RUN ln -s /phantomjs/bin/phantomjs /usr/local/share/phantomjs
-RUN ln -s /phantomjs/bin/phantomjs /usr/local/bin/phantomjs
-RUN ln -s /phantomjs/bin/phantomjs /usr/bin/phantomjs
 
-# Uninstall dependencies
-RUN echo "Removing build dependencies, clean temporary files"
-RUN apt-get autoremove -yqq
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN echo "Symlink phantom so that we are able to run `phantomjs`"
+RUN ln -s /built/ubuntu/bin/phantomjs /usr/local/share/phantomjs
+RUN ln -s /built/ubuntu/bin/phantomjs /usr/local/bin/phantomjs
+RUN ln -s /built/ubuntu/bin/phantomjs /usr/bin/phantomjs
+
 
 # Test
+
 RUN echo "Checking if phantom works"
 RUN phantomjs -v
-
 CMD echo "phantomjs binary is located at /phantomjs/bin/phantomjs" \
      && echo "just run 'phantomjs' (version `phantomjs -v`)"
