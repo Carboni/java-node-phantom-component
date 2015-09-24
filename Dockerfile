@@ -17,20 +17,18 @@ RUN apt-get install -fyqq \
 
 # Add pre-built binaries:
 
-ADD ./ubuntu /built/
+ADD ./ubuntu/bin /phantomjs/bin
 
 
-# Symlink
+# Symlink phantom so that we are able to run "phantomjs"
 
-RUN echo "Symlink phantom so that we are able to run `phantomjs`"
-RUN ln -s /built/ubuntu/bin/phantomjs /usr/local/share/phantomjs
-RUN ln -s /built/ubuntu/bin/phantomjs /usr/local/bin/phantomjs
-RUN ln -s /built/ubuntu/bin/phantomjs /usr/bin/phantomjs
+RUN ln -s /phantomjs/bin/phantomjs /usr/local/share/phantomjs
+RUN ln -s /phantomjs/bin/phantomjs /usr/local/bin/phantomjs
+RUN ln -s /phantomjs/bin/phantomjs /usr/bin/phantomjs
 
 
-# Test
+# Test if Phantom works
 
-RUN echo "Checking if phantom works"
 RUN phantomjs -v
 CMD echo "phantomjs binary is located at /phantomjs/bin/phantomjs" \
      && echo "just run 'phantomjs' (version `phantomjs -v`)"
